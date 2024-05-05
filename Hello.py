@@ -15,7 +15,7 @@ def create_connection():
         database="database-1",
         user="postgres",
         password="ryoNiW093Px3FbZpY875",
-        host="database-1.cluster-cc4idrhev5xz.eu-north-1.rds.amazonaws.com	",
+        host="database-1.cluster-cc4idrhev5xz.eu-north-1.rds.amazonaws.com",
         port="5432")
     return conn
 
