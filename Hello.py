@@ -14,7 +14,7 @@ def create_connection():
     conn = psycopg2.connect(
         database="database-1-instance-1",
         user="postgres",
-        password="7sD8jUdR862JeZwld2Vb",
+        password="4R5KsTF0AOYO3FkAZUJc",
         host="database-1.cluster-cc4idrhev5xz.eu-north-1.rds.amazonaws.com",
         port="5432")
     return conn
