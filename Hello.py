@@ -219,15 +219,15 @@ def main():
         insert_data(conn, datetime_input, dry_weight_input, ph_input)
         conn.close()
 
-    # # Button to view data
-    # if st.button("View Data"):
-    #     conn = create_connection()
-    #     data = fetch_data(conn)
-    #     conn.close()
+    # Button to view data
+    if st.button("View Data"):
+        conn = create_connection()
+        data = fetch_data(conn)
+        conn.close()
 
-    #     # Create a DataFrame for display
-    #     df = pd.DataFrame(data, columns=['ID', 'Datetime', 'Dry Weight', 'pH'])
-    #     st.dataframe(df)
+        # Create a DataFrame for display
+        df = pd.DataFrame(data, columns=['ID', 'Datetime', 'Dry Weight', 'pH'])
+        st.dataframe(df)
 
 # Run the app
 if __name__ == "__main__":
