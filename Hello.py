@@ -117,10 +117,10 @@ LOGGER = get_logger(__name__)
 # Function to connect to AWS RDS database
 def create_connection():
     conn = psycopg2.connect(
-        database="research-db",
+        database="research",
         user="alpro",
         password="PVtgs8mtGsThUEl2NjR0",
-        host="research-db.c2bcka4zvdxd.us-east-1.rds.amazonaws.com",
+        host="research.c2bcka4zvdxd.us-east-1.rds.amazonaws.com",
         port="5432"
     )
     return conn
