@@ -1,8 +1,14 @@
-altair
-numpy
-pandas
-pydeck
-streamlit
-psycopg2-binary
-boto3
-os
+# altair
+# numpy
+# pandas
+# pydeck
+# streamlit
+# psycopg2-binary
+# boto3
+# os
+
+
+streamlit==1.25.0  # Replace with the latest version if needed
+pandas==1.5.3      # Replace with the latest version if needed
+psycopg2-binary==2.9.7  # psycopg2-binary is recommended for easier installation
+boto3==1.28.0      # Replace with the latest version if needed
