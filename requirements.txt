@@ -4,3 +4,4 @@ pandas
 pydeck
 streamlit
 psycopg2-binary
+boto3
