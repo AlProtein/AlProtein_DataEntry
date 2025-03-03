@@ -159,9 +159,9 @@ import os
 LOGGER = get_logger(__name__)
 
 # AWS S3 Configuration
-S3_BUCKET_NAME = "your-s3-bucket-name"  
-AWS_ACCESS_KEY = "YOUR_AWS_ACCESS_KEY"  
-AWS_SECRET_KEY = "YOUR_AWS_SECRET_KEY" 
+S3_BUCKET_NAME = "microscope-imgs"  
+AWS_ACCESS_KEY = "AKIA6F35EAK7J4KOAUO2"  
+AWS_SECRET_KEY = "qEQ2Ilqq0Cm0NDPuzHOsjLakFOoit7KjfJjlqX6R" 
 AWS_REGION = "us-east-1"  
 
 # Initialize S3 client
