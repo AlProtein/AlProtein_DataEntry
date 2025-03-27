@@ -171,7 +171,7 @@ s3_client = boto3.client(
     region_name=AWS_REGION
 )
 
-# Database functions
+# Database functions remain the same
 def create_connection():
     conn = psycopg2.connect(
         database="research",
@@ -206,17 +206,38 @@ def fetch_data(conn):
     data = cursor.fetchall()
     return data
 
-# S3 functions
+# Updated S3 functions
 def validate_image_name(filename):
     """Validate if the image name follows the required format."""
-    pattern = r'^(SP|WL)-\d{8}\.[a-zA-Z]+$'
+    # Pattern: SP-XXXX-YYYYMMDD-[P|C]
+    pattern = r'^(SP|WL)-\d{4}-\d{8}-[PC]\.[a-zA-Z]+$'
     return bool(re.match(pattern, filename))
+
+def parse_image_name(filename):
+    """Parse the image name to extract components."""
+    # Remove file extension
+    name = os.path.splitext(filename)[0]
+    # Split components
+    try:
+        strain, culture_num, date, purity = name.split('-')
+        return {
+            'strain': strain,
+            'culture_number': culture_num,
+            'date': date,
+            'purity': purity
+        }
+    except:
+        return None
 
 def get_folder_path(filename):
     """Determine the appropriate folder based on image prefix."""
-    if filename.startswith('SP-'):
+    components = parse_image_name(filename)
+    if not components:
+        return None
+
+    if components['strain'] == 'SP':
         return 'Spirulina'
-    elif filename.startswith('WL-'):
+    elif components['strain'] == 'WL':
         return 'Water Lentils'
     return None
 
@@ -224,12 +245,20 @@ def upload_to_s3(file, filename):
     try:
         # Validate filename format
         if not validate_image_name(filename):
-            raise ValueError(f"Invalid filename format. Expected format: 'SP-YYYYMMDD' or 'WL-YYYYMMDD'")
+            raise ValueError(
+                "Invalid filename format. Expected format: 'STRAIN-CULTURENUMBER-YYYYMMDD-PURITY'\n"
+                "Example: SP-2314-20250327-P or WL-1441-20250223-C"
+            )
+
+        # Parse and validate components
+        components = parse_image_name(filename)
+        if not components:
+            raise ValueError("Unable to parse filename components")
 
         # Get the appropriate folder
         folder = get_folder_path(filename)
         if not folder:
-            raise ValueError("Invalid file prefix. Must start with 'SP-' or 'WL-'")
+            raise ValueError("Invalid strain prefix. Must be 'SP' or 'WL'")
 
         # Create the full S3 path
         s3_path = f"images/{folder}/{filename}"
@@ -299,9 +328,30 @@ def image_data_page():
     📸 **For Image Analysis:**
     Upload research-related images to S3 storage.
 
-    **Naming Convention:**
-    - Spirulina images: SP-YYYYMMDD (e.g., SP-20250327)
-    - Water Lentils images: WL-YYYYMMDD (e.g., WL-20250223)
+    ### Naming Convention Guide:
+
+    **Format:** STRAIN-CULTURENUMBER-DATE-PURITY
+
+    **Components:**
+    1. **Strain (2 letters):**
+        - SP: Spirulina
+        - WL: Water Lentils
+
+    2. **Culture Number (4 digits):**
+        - Unique culture identifier
+        - Example: 2314, 1441
+
+    3. **Date (YYYYMMDD):**
+        - Format: Year-Month-Day
+        - Example: 20250327
+
+    4. **Purity (1 letter):**
+        - P: Pure culture
+        - C: Contaminated culture
+
+    **Examples:**
+    - SP-2314-20250327-P (Spirulina, Culture 2314, March 27, 2025, Pure)
+    - WL-1441-20250223-C (Water Lentils, Culture 1441, February 23, 2025, Contaminated)
     """)
 
     # Image upload section
@@ -318,7 +368,16 @@ def image_data_page():
                 if success:
                     success_count += 1
                     folder = get_folder_path(uploaded_file.name)
-                    st.success(f"Successfully uploaded {uploaded_file.name} to {folder} folder!")
+                    components = parse_image_name(uploaded_file.name)
+                    st.success(f"""
+                        Successfully uploaded image:
+                        - File: {uploaded_file.name}
+                        - Strain: {components['strain']}
+                        - Culture: {components['culture_number']}
+                        - Date: {components['date']}
+                        - Purity: {'Pure' if components['purity'] == 'P' else 'Contaminated'}
+                        - Folder: {folder}
+                    """)
                 else:
                     st.error(f"Failed to upload {uploaded_file.name}: {error_message}")
 
@@ -340,7 +399,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 
 # # Hello.py
