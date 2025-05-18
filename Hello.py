@@ -418,8 +418,8 @@ LOGGER = get_logger(__name__)
 S3_BUCKET_NAME = "microscope-imgs"  # For Spirulina/Water Lentils images
 TANKS_S3_BUCKET_NAME = "tanks-imgs"  # For Tanks images
 
-AWS_ACCESS_KEY = "YOUR_AWS_ACCESS_KEY"
-AWS_SECRET_KEY = "YOUR_AWS_SECRET_KEY"
+AWS_ACCESS_KEY = "AKIA6F35EAK7J4KOAUO2"
+AWS_SECRET_KEY = "qEQ2Ilqq0Cm0NDPuzHOsjLakFOoit7KjfJjlqX6R"
 AWS_REGION = "us-east-1"
 
 # Initialize S3 client
