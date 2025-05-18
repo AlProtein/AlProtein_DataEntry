@@ -512,20 +512,20 @@ def upload_to_s3(file, filename):
     except Exception as e:
         return False, str(e)
 
-# --- Tanks Image Functions ---
+# --- Tanks Image Functions (Updated Naming Convention) ---
 def validate_tank_image_name(filename):
-    # Example: TANK-1234-20250518-IN.jpg
-    pattern = r'^TANK-\d{4}-\d{8}-[A-Z]+\.[a-zA-Z]+$'
+    # Example: SP-2314-20250518-Right.jpg
+    pattern = r'^(SP|WL)-\d{4}-\d{8}-(Right|Left|Center)\.[a-zA-Z]+$'
     return bool(re.match(pattern, filename))
 
 def parse_tank_image_name(filename):
     name = os.path.splitext(filename)[0]
     try:
-        _, tank_num, date, img_type = name.split('-')
+        strain, culture_num, date, position = name.split('-')
         return {
-            'tank_number': tank_num,
+            'culture_name': f"{strain}-{culture_num}",
             'date': date,
-            'type': img_type
+            'position': position
         }
     except:
         return None
@@ -534,7 +534,8 @@ def upload_tank_image_to_s3(file, filename):
     try:
         if not validate_tank_image_name(filename):
             raise ValueError(
-                "Invalid filename format. Expected: TANK-XXXX-YYYYMMDD-TYPE.jpg"
+                "Invalid filename format. Expected: STRAIN-CULTURENUMBER-YYYYMMDD-POSITION.jpg\n"
+                "Example: SP-2314-20250518-Right.jpg"
             )
         components = parse_tank_image_name(filename)
         if not components:
@@ -653,15 +654,27 @@ def tanks_image_data_page():
 
     ### Naming Convention Guide:
 
-    **Format:** TANK-XXXX-YYYYMMDD-TYPE
+    **Format:** STRAIN-CULTURENUMBER-YYYYMMDD-POSITION
 
     **Components:**
-    1. **TANK (fixed):** TANK
-    2. **Tank Number (4 digits):** e.g., 1234
-    3. **Date (YYYYMMDD):** e.g., 20250518
-    4. **Type:** IN (inside), OUT (outside), etc.
+    1. **Strain (2 letters):**
+        - SP: Spirulina
+        - WL: Water Lentils
 
-    **Example:** TANK-1234-20250518-IN.jpg
+    2. **Culture Number (4 digits):**
+        - Unique culture identifier
+        - Example: 2314, 1441
+
+    3. **Date (YYYYMMDD):**
+        - Format: Year-Month-Day
+        - Example: 20250518
+
+    4. **Position:**
+        - Right
+        - Left
+        - Center
+
+    **Example:** SP-2314-20250518-Right.jpg
     """)
     uploaded_files = st.file_uploader("Choose tank image files", type=['png', 'jpg', 'jpeg'], accept_multiple_files=True)
     if uploaded_files:
@@ -673,9 +686,9 @@ def tanks_image_data_page():
                     components = parse_tank_image_name(uploaded_file.name)
                     st.success(f"""
                         Uploaded: {uploaded_file.name}
-                        - Tank: {components['tank_number']}
+                        - Culture Name: {components['culture_name']}
                         - Date: {components['date']}
-                        - Type: {components['type']}
+                        - Position: {components['position']}
                     """)
                     success_count += 1
                 else:
@@ -700,8 +713,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
 
 
 # # Hello.py
