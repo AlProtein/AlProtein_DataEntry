@@ -30,7 +30,7 @@ def create_connection():
     conn = psycopg2.connect(
         database="research",
         user="alpro",
-        password="PVtgs8mtGsThUEl2NjR0",
+        password="y13HLddTiOes36FWZoYY",
         host="research.c2bcka4zvdxd.us-east-1.rds.amazonaws.com",
         port="5432"
     )
