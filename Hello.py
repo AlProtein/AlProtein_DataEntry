@@ -1445,8 +1445,14 @@ def numerical_data_page():
 def manual_data_entry_page():
     """UI for the new manual data entry section."""
     st.markdown("## Manual Data Entry")
-    st.markdown("📝 **For R&D Team:** Manually input sensor data. **Note:** Leave a field as `0.0` to save it as N/A (Not Applicable).")
+    st.markdown("""
+    📝 **For R&D Team:** This section is for manual data entry and serves two main purposes:
 
+    1.  **Data Backup:** Use this form to manually log data if the automated sensor system fails or is offline. This ensures no data is lost during downtime.
+    2.  **Comparative Analysis:** Enter manual readings to compare them with data captured by the automated sensors. This helps in validating sensor accuracy and system performance.
+ 
+    **Instructions:** The **Timestamp** (Date and Time) is mandatory. You must enter a value for at least one other field. All other fields are optional. Leave a field as `0.0`to save it as N/A (Not Available).
+    """)
     # --- Data Entry Form ---
     st.markdown("### Enter Sensor Data 👇")
     
